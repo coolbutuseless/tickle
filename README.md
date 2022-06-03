@@ -132,6 +132,8 @@ Please view the online vignettes for more details on how to use
     font](https://coolbutuseless.github.io/package/tickle/articles/fonts.html)
 -   [Understanding widget
     layout](https://coolbutuseless.github.io/package/tickle/articles/packing.html)
+-   [Using an idle callback to run a function continually in the
+    background](https://coolbutuseless.github.io/package/tickle/articles/idle.html)
 
 ## Containers
 

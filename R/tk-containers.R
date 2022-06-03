@@ -66,6 +66,10 @@ sanitize_weights <- function(weights, N) {
 #' @param title Window Title
 #' @param width,height width and height of window.  If not given then 
 #'        UI will be automatically sized.
+#' @param idle_func callback function which will be run continually while
+#'        this window is open.
+#' @param idle_fps the frame rate at which this idle functino should be called.
+#'        Default: 30.  Set to 'NA' for running as fast as possible.
 #'
 #' @import tcltk
 #' @return the tcl/tk window handle
@@ -74,19 +78,22 @@ sanitize_weights <- function(weights, N) {
 #' @family widgets containers
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 tic_window <- function(..., title = "{tickle}", width = NULL, height = NULL,
+                       idle_func = NULL, idle_fps = 30, 
                        bind = NULL, pack = NULL, pack_def = NULL) {
   
-  args <- find_args(..., ignore = c('width', 'height'))
+  args <- find_args(..., ignore = c('width', 'height', 'idle_func', 'idle_fps'))
   args$named$title  <- NULL
   
   spec <- list(
-    args     = args$named,
-    type     = 'window',
-    children = args$unnamed,
-    binding  = bind,
-    title    = title,
-    width    = width,
-    height   = height
+    args      = args$named,
+    type      = 'window',
+    children  = args$unnamed,
+    binding   = bind,
+    title     = title,
+    width     = width,
+    height    = height,
+    idle_func = idle_func,
+    idle_fps  = idle_fps
   )
   class(spec) <- 'tic_spec'
   spec
@@ -130,7 +137,19 @@ render_tic_window <- function(parent = NULL, spec) {
   }
   
   render_binding(container, spec)
-  pack_children(container, objs)
+  res <- pack_children(container, objs)
+  
+  #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  # Idle func?
+  #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  if (!is.null(spec$idle_func) && is.function(spec$idle_func)) {
+    # message("Attaching idle func")
+    launch_idle_func(res, spec$idle_func, fps = spec$idle_fps, initial_delay = 100)
+  }
+  
+  
+  
+  res
 }
 
 

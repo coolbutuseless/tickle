@@ -16,8 +16,13 @@ for \code{tic_window()} objects. Otherwise this should be a
 TODO: parent could also be something else done by a render_ui call?}
 }
 \value{
-a nested named list of tcl objects making up the UI.  As a side
-        effect of unning this code, a tcl/tk window will be opened and
+a nested named list of tcl objects making up the UI.  For advanced users
+        that want to do low-level manipulation of the window, these 
+        \code{tclObj} objects are a key argument to functions in 
+        the \code{tcltk} package.
+
+        The key side
+        effect of this function is that a tcl/tk window will be opened and
         rendered to this specficiation.
 }
 \description{

@@ -9,6 +9,8 @@ tic_window(
   title = "{tickle}",
   width = NULL,
   height = NULL,
+  idle_func = NULL,
+  idle_fps = 30,
   bind = NULL,
   pack = NULL,
   pack_def = NULL
@@ -30,6 +32,12 @@ tic_window(
 
 \item{width, height}{width and height of window.  If not given then 
 UI will be automatically sized.}
+
+\item{idle_func}{callback function which will be run continually while
+this window is open.}
+
+\item{idle_fps}{the frame rate at which this idle functino should be called.
+Default: 30.  Set to 'NA' for running as fast as possible.}
 
 \item{bind}{bind commands to particular events on this element. This may be 
 a single result of \code{bind_opts()} or a list of them for multiple

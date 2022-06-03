@@ -1,7 +1,7 @@
 Package: tickle
 Type: Package
 Title: Easily Build Tcl/Tk UIs
-Version: 0.1.0
+Version: 0.1.1
 Author: mikefc
 Maintainer: mikefc <mikefc@coolbutuseless.com>
 Description: Wrap tcltk to make GUI creation easier.
