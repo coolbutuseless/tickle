@@ -1,0 +1,163 @@
+---
+title: "Detailed Example"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Detailed Example}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+
+# Video 
+
+Since an interactive window cannot be captured in a vignette, a video
+screen capture has been taken of the window and included below.
+
+<video controls>
+  <source src="video/macrodata1.mp4" type="video/mp4">
+  Your browser does not support the video tag.
+</video> 
+
+
+# Code
+
+
+```{r eval = FALSE}
+library(tickle)
+
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# Buttons/Values which are directly written to by the GUI or store state
+# about the GUI must be "reactive" objects.
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+checkbutton1 <- reactive_lgl(FALSE)
+checkbutton2 <- reactive_lgl(TRUE)
+checkbutton3 <- reactive_lgl(NA)
+checkbutton4 <- reactive_lgl(FALSE)
+
+radio_opts <- c('Adam', 'Betty', 'Craig', 'Daniel')
+radio_var  <- reactive_chr(radio_opts[1])
+
+text_entry <- reactive_chr("Single Line Text entry")
+
+spinbox_options  <- c("Spinbox", "is", "good")
+spinbox_selected <- reactive_chr(spinbox_options[1])
+
+combobox_options  <- c("Combobox", "is", "good")
+combobox_selected <- reactive_chr(combobox_options[1])
+
+ro_combobox_options  <- c("Readonly Combobox", "is", "good")
+ro_combobox_selected <- reactive_chr(ro_combobox_options[1])
+
+slider_var  <- reactive_dbl(25)
+textbox_var <- reactive_textbox()
+
+
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# Define the specification for the UI
+# Unless you are an expert, always start with a `tic_window()`
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ui_spec <- tic_window(
+  title = "{tickle} Complex Demo",
+  
+  tic_menu(
+    tic_submenu(label = "File",
+      tic_menuitem("Tickle", "command", function() {message("Tickle")}),
+      tic_menuitem("Me"    , "command", function() {message("Me")}),
+      tic_menuitem(menutype = "separator"),
+      tic_menuitem("Elmo"  , "command", function() {message("Elmo")})
+    )
+  ),
+  
+  tic_col(
+    tic_label(toupper("Macrodata Refinement"), style = "h1"),
+    tic_row(
+      pack_def = pack_opts(padx = 15), # Default padding for children in this row
+      tic_col(
+        tic_labelframe(
+          text = "Checkbuttons", 
+          relief = 'groove',
+          tic_col(
+            tic_checkbutton(text = "Unchecked"  , variable = checkbutton1),
+            tic_checkbutton(text = "Checked"    , variable = checkbutton2),
+            tic_checkbutton(text = "Disabled"   , variable = checkbutton4, state = 'disabled')
+          )
+        ),
+        tic_separator(),
+        tic_labelframe(
+          text = "Radiobuttons",
+          tic_col(
+            tic_radiobutton(text = radio_opts[1], value = radio_opts[1], variable = radio_var),
+            tic_radiobutton(text = radio_opts[2], value = radio_opts[2], variable = radio_var),
+            tic_radiobutton(text = radio_opts[3], value = radio_opts[3], variable = radio_var, state = 'disabled'),
+            tic_radiobutton(text = radio_opts[4], value = radio_opts[4], variable = radio_var)
+          )
+        )
+      ),
+      tic_col(
+        pack_def = pack_opts(pady = 3),
+        tic_textentry(textvariable = text_entry),
+        tic_spinbox(values = spinbox_options, textvariable = spinbox_selected),
+        tic_combobox(values = combobox_options, textvariable = combobox_selected),
+        tic_combobox(values = ro_combobox_options, textvariable = ro_combobox_selected,
+                     state = 'readonly'),
+        tic_menubutton(
+          text = "Menubutton",
+          tic_menuitem("Tickle", menutype = "command", function() {message("Tickle")}),
+          tic_menuitem("Me"    , "command", function() {message("Me")}),
+          tic_menuitem(menutype = "separator"),
+          tic_menuitem("Elmo"  , "command", function() {message("Elmo")})
+        ),
+        tic_button(text = "Button", command = function() {message("Click!")}),
+        tic_button(text = "Accent button", style = 'Accent.TButton'),
+        tic_checkbutton(text = "Toggle button", style = 'Toggle.TButton'),
+        tic_checkbutton(text = "Switch", style = 'Switch.TCheckbutton')
+      ),
+      tic_col(
+        tic_notebook(
+          labels = c("Tab 1", "Tab 2", "Tab 3"),
+          tic_col(
+            tic_row(
+              tic_slider(slider_var),
+              tic_progressbar(slider_var)
+            ),
+            tic_col(
+              tic_row(
+                pack_def = pack_opts(padx = 1),
+                tic_button('primary'  , style = 'primary'  ),
+                tic_button('secondary', style = 'secondary'),
+                tic_button('success'  , style = 'success'  ),
+                tic_button('danger'   , style = 'danger'   ),
+                tic_button('warning'  , style = 'warning'  ),
+                tic_button('info'     , style = 'info'     ),
+                tic_button('light'    , style = 'light'    ),
+                tic_button('dark'     , style = 'dark'     )
+              ),
+              tic_label("Textbox for long form text entry"),
+              tic_textbox(textbox_var)
+            )
+          ),
+          tic_frame(
+            tic_button("Tab 2 contents", pack = pack_opts(expand = FALSE, fill = 'none', side = 'bottom'))
+          ),
+          tic_button("Tab 3 contents")
+        )
+      )
+    )
+  )
+)
+
+
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# Now render the UI specification to the screen
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+win <- render_ui(ui_spec)
+```
+
+

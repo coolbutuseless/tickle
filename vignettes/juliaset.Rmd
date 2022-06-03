@@ -1,0 +1,136 @@
+---
+title: "Julia Set Explorer"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Julia Set Explorer}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+
+
+# Video 
+
+Since an interactive window cannot be captured in a vignette, a video
+screen capture has been taken of the window and included below.
+
+<video controls>
+  <source src="video/julia.mp4" type="video/mp4">
+  Your browser does not support the video tag.
+</video> 
+
+
+
+# Code
+
+
+```{r eval = FALSE}
+# remotes::install_github("coolbutuseless/frak")
+library(frak)
+library(tickle)
+```
+
+
+```{r eval=FALSE}
+
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# Open a graphics device. On macOS the x11() device is much faster than 
+# the Rstudio graphics device
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+x11(type = 'cairo', antialias = 'none')
+
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# Define some palettes and a reactive variable 'pal_var' which will be set
+# via radtiobuttons in the UI
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+pal_values <- c('magma', 'inferno', 'plasma', 'viridis', 'cividis')
+pal_var <- reactive_chr(pal_values[1])
+pal <- list(
+  magma   = viridisLite::magma  (256),
+  inferno = viridisLite::inferno(256),
+  plasma  = viridisLite::plasma (256),
+  viridis = viridisLite::viridis(256),
+  cividis = viridisLite::cividis(256)
+)
+
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# Gamma and equalize set via a slider and checkbutton respectively
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+gamma    <- reactive_dbl(1)
+equalize <- reactive_lgl(TRUE)
+
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# Global state of the julia rendering window
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+x <- 0
+y <- 0
+zoom <- 1
+
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# Render julia set to the current graphics device
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+update_julia <- function(...) {
+  im <- frak::julia(movex = x, movey = y, zoom = zoom, equalize = equalize(), gamma = gamma())
+  ras <- pal[[pal_var()]][as.integer(im) + 1L]
+  dim(ras) <- dim(im)
+  grid::grid.raster(as.raster(ras))
+}
+
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# Initial call to have a starting view
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+update_julia()
+
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# Create the UI specification
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ui_spec <- tic_window(
+  
+  tic_col(
+    tic_label("Control panel", style = "h2"),
+    tic_separator(),
+    tic_label("Activate this window, then\nuse your keyboard arrow keys and +/- here\n to control the julia set display"),
+    tic_separator(),
+    tic_row(
+      tic_label("Gamma"),
+      tic_slider(variable = gamma, command = update_julia, from = 0, to = 5)
+    ),
+    tic_separator(),
+    tic_checkbutton("Equalize", variable = equalize, command = update_julia),
+    tic_separator(),
+    tic_radiobutton(text = pal_values[1], value = pal_values[1], variable = pal_var, command = update_julia),
+    tic_radiobutton(text = pal_values[2], value = pal_values[2], variable = pal_var, command = update_julia),
+    tic_radiobutton(text = pal_values[3], value = pal_values[3], variable = pal_var, command = update_julia),
+    tic_radiobutton(text = pal_values[4], value = pal_values[4], variable = pal_var, command = update_julia),
+    tic_radiobutton(text = pal_values[5], value = pal_values[5], variable = pal_var, command = update_julia)
+  ),
+  
+  # kepress event in tic_window()
+  bind = bind_opts("Key", function(k, K) {
+    switch(
+      K,
+      Left  = {x <<- x - 0.1/zoom},
+      Right = {x <<- x + 0.1/zoom},
+      Up    = {y <<- y - 0.1/zoom},
+      Down  = {y <<- y + 0.1/zoom},
+      minus = {zoom <<- max(zoom * 0.8, 1)},
+      equal = ,
+      plus  = {zoom <<- zoom * 1.25},
+    )
+    update_julia()
+  })
+)
+
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# Render the UI
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+win <- render_ui(ui_spec)
+```
+

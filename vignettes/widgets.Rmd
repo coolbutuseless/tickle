@@ -1,0 +1,107 @@
+---
+title: "Widget, Canvas and Container Gallery"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Widget, Canvas and Container Gallery}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+
+## Containers
+
+Containers are ways of grouping multiple widgets.
+
+Containers can be nested within other containers to achieve complex layouts.
+
+| Container  | Code/Description   |
+|---|---|
+| <img src="image/container-window.png" width="200" />  | <code>tic_window(...)</code><br /> Create a top level window  |
+| <img src="image/container-col.png" width="100" />   | <code>tic_col(A, B, C)</code><br />  Layout objects in column |
+| <img src="image/container-row.png" width="200" />   | <code>tic_row(A, B, C)</code><br /> Layout objects rowwise|
+| <img src="image/container-frame.png" width="200" />   | <code>tic_frame(...)</code><br /> Invisible container. Useful for advanced users who want to customize layout |
+| <img src="image/container-labelframe.png" width="200" />   |  <code>tic_labelframe(...)</code><br /> Frame with a a label and usually visible outline  |
+| <img src="image/container-notebook.png" width="200" />   | <code>tic_notebook(A, B, C)</code><br />  Tabbed display |
+| <img src="image/container-panedwindow.png" width="200" />   | <code>tic_panedwindow(A, B, C)</code><br /> Layout multiple elements which can be resized as panes|
+
+
+## Widgets
+
+| Widget  | Code/Description  |
+|---|---|
+| <img src="image/widget-label.png" width="200" />   | <code>tic_label(...)</code><br />  Display text. If you need headings rather than body text, Use `style = 'h1'` to `style = 'h5'` for different sized text |
+| <img src="image/widget-button.png" width="200" />   | <code>tic_button(...)</code><br /> Clickable button. Available `style` options: 'primary', 'seconary', 'info', 'success', 'warning', 'danger', 'light', 'dark' |
+| <img src="image/widget-checkbutton-default.png" width="200" />   | <code>tic_checkbutton(...)</code><br />  On/off button (default styling) |
+| <img src="image/widget-checkbutton-toggle.png" width="200" />   | <code>tic_checkbutton(...)</code><br />  On/off button with `style = 'toggle'` |
+| <img src="image/widget-checkbutton-switch.png" width="200" />   | <code>tic_checkbutton(...)</code><br />  On/off button with `style = 'switch'` |
+| <img src="image/widget-radiobutton.png" width="200" />   | <code>tic_radiobutton(...)</code><br />  Groups of mutually exclusion options|
+| <img src="image/widget-menubutton.png" width="200" />   | <code>tic_menubutton(...)</code><br />  Button which displays a drop-down menu |
+| <img src="image/widget-canvas.png" width="200" />   | <code>tic_canvas(...)</code><br /> General drawing canvas |
+| <img src="image/widget-spinbox.png" width="200" />   | <code>tic_spinbox(...)</code><br /> Choose options |
+| <img src="image/widget-combobox.png" width="200" />   | <code>tic_combobox(...)</code><br />  Choose options |
+| <img src="image/widget-textentry.png" width="200" />   | <code>tic_textentry(...)</code><br /> Single line text entry  |
+| <img src="image/widget-textbox.png" width="200" />   | <code>tic_textbox(...)</code><br />  Multipe line text entry  |
+| <img src="image/widget-progressbar.png" width="200" />   | <code>tic_progressbar(...)</code><br /> Progress bar  |
+| <img src="image/widget-slider.png" width="200" />   | <code>tic_slider(...)</code><br />  Slider |
+
+
+## Popups
+
+*Popups* are windows which are initiated separate from the main UI.
+
+| Popup  | Code/Description |
+|---|---|
+| <img src="image/popup-color-picker.png" width="200" />  | <code>popup_color_picker()</code><br />   |
+| <img src="image/popup-messagebox.png" width="200" />  | <code>popup_messagebox()</code><br />   |
+| <img src="image/popup-open-file.png" width="200" />  | <code>popup_open_file()</code><br />   |
+| <img src="image/popup-save-file.png" width="200" />  | <code>popup_save_file()</code><br />   |
+
+
+
+## Canvas
+
+
+After creating a canvas with `tic_canvas()`, it can be manipulated with the following
+commands:
+
+* Draw on the canvas
+    * `canvas_line()`
+    * `canvas_text()`
+    * `canvas_rect()`
+    * `canvas_polygon()`
+    * `canvas_oval()`
+    * `canvas_arc()`
+* `canvas_plot()` render a plot to the canvas
+* `canvas_clear()` clear all objects from the canvas
+* `canvas_image()` render an image from a file to the canvas
+* `canvas_save()` save the contents of the canvas to an image file.
+
+
+The actual canvas in tcl/tk renders *structured graphics* and it is much more like
+SVG or PDF than just a simple array of pixels.
+
+The canvas implementation in this package treats the canvas as just a raster 
+object i.e. a rectangular collection of pixels.  This made it easier to write
+this package and keep the API/syntax simple, but it doesn't unleash the full
+power of the canvas.
+
+The effort to write a more complete abstraction over the canvas is
+not currently warranted.  **Please get in contact if such a facility is important to you.**
+
+
+
+
+
+
+
+
+
+
+
