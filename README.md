@@ -6,7 +6,7 @@
 <!-- badges: start -->
 
 ![](https://img.shields.io/badge/cool-useless-green.svg)
-[![R-CMD-check](https://github.com/coolbutuseless/tickle-dev/workflows/R-CMD-check/badge.svg)](https://github.com/coolbutuseless/tickle-dev/actions)
+[![R-CMD-check](https://github.com/coolbutuseless/tickle/workflows/R-CMD-check/badge.svg)](https://github.com/coolbutuseless/tickle/actions)
 <!-- badges: end -->
 
 `{tickle}` is a package for creating UIs in base R.
