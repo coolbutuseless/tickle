@@ -127,6 +127,8 @@ Please view the online vignettes for more details on how to use
     layout](https://coolbutuseless.github.io/package/tickle/articles/packing.html)
 -   [Continuous rain drops using an idle
     callback](https://coolbutuseless.github.io/package/tickle/articles/idle.html)
+-   [Including images in
+    buttons](https://coolbutuseless.github.io/package/tickle/articles/image.html)
 
 ## Containers
 
