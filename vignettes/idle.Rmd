@@ -17,20 +17,18 @@ knitr::opts_chunk$set(
 
 ## Run a function continually while window is valid
 
-An **idle callback** is a function that will be run continually while the 
-UI window is valid.
+An **idle callback** is an R function that will be run continually while the 
+UI window is valid - regardless of what the user is doing.
 
-This callback function is just an R function which takes no arguments.
+Thanks to [ozjimbob](https://twitter.com/ozjimbob) for this great example!
 
-Idle callbacks can only be set on the toplevel `tic_window()` element.
+## Video 
 
+In this example, at each timestep the `rain()` function updates the size
+of the current effect for all the current rain drops.
 
-
-
-# Video 
-
-Since an interactive window cannot be captured in a vignette, a video
-screen capture has been taken of the window and included below.
+If the user changes values in the UI, then this will be used to updated the 
+appearance of the rain drops.
 
 <video controls>
   <source src="video/idle.mp4" type="video/mp4">
@@ -42,15 +40,11 @@ screen capture has been taken of the window and included below.
 
 ## Code
 
-* Open a normal R device
-* Write the idle function to draw a line between two random points
-* Create a simple GUI that lets the user select line colour and linetype
-* The idle callback will be called continually - using the latest values
-  selected by the user
 
 ```{r eval = FALSE}
 library(grid)
 library(tickle)
+
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 # Open a double-buffered graphics device that renders nice and fast
@@ -60,49 +54,46 @@ dev.control(displaylist = 'inhibit')
 
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-# REactive variables controlled by the UI
+# Reactive variables controlled by the UI
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-cols <- rainbow(6)
-col_choice <- reactive_chr(cols[1])
-
-thickness <- reactive_dbl(1)
+size <- reactive_dbl(value=6)
+rate <- reactive_dbl(value=10)
 
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-# Function to draw random lines.  Uses global reactive variables to influence
-# the line appearance
+# Raindrops data: coordinates and current size
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-so_random <- function() {
-  x1 <- runif(1)
-  y1 <- runif(1)
-  x2 <- runif(1)
-  y2 <- runif(1)
-  
+df = data.frame(x=runif(10,-1,1),y=runif(10,-1,1),size=rep(1,10))
+
+
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# Plot the current rain drops
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+rain <- function() {
+  df <<- tail(df,1000)
+  df2 <- data.frame(x=runif(rate(),-1,1),y=runif(rate(),-1,1),size=rep(size(),rate()))
+  df <<- rbind(df,df2)
+  df$size <<- df$size * 0.9
   dev.hold()
-  grid::grid.lines(
-    x = c(x1, x2),
-    y = c(y1, y2),
-    gp = gpar(col = col_choice(), lwd = thickness())
-  )
+  plot(df$y,df$x,cex=df$size,xlim=c(-1,1),ylim=c(-1,1))
   dev.flush()
 }
 
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-# Define the UI.  Top-level window has an 'idle_func'
+# Define the UI.  
+# The idle callback is attached to the top level window.
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 ui_spec <- tic_window(
-  idle_func = so_random, idle_fps = 10,
+  idle_func = rain, idle_fps = 10,
   tic_col(
-    tic_label("I'm so random!!", style = 'h3'),
+    tic_label("Raindrops", style = 'h3'),
     tic_separator(),
     tic_row(
       tic_label("Thickness"),
-      tic_slider(variable = thickness, from = 1, to = 10)
-    ),
-    tic_row(
-      tic_label("Colour"),
-      tic_spinbox(values = cols, textvariable = col_choice)
+      tic_slider(variable = size, from = 6, to = 20),
+      tic_label("Rate"),
+      tic_slider(variable = rate, from = 1, to = 40)
     )
   )
 )

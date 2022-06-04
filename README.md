@@ -99,17 +99,10 @@ win <- render_ui(ui_spec)
 
 ## Gallery
 
-<a href="https://coolbutuseless.github.io/package/tickle/articles/detailed-example.html">
-<img src="man/figures/demo-complex.png" width="60%" /> </a>
-<hr />
-<br />
-<a href="https://coolbutuseless.github.io/package/tickle/articles/juliaset.html">
-<img src="man/figures/julia.png" width="60%" /> </a>
-<hr />
-
-<br />
-<a href="https://coolbutuseless.github.io/package/tickle/articles/ggreview.html">
-<img src="man/figures/ggreview-snap.png" width="60%" /> </a>
+|                                                                                                                                                       |                                                                                                                                        |
+|-------------------------------------------------------------------------------------------------------------------------------------------------------|----------------------------------------------------------------------------------------------------------------------------------------|
+| <a href="https://coolbutuseless.github.io/package/tickle/articles/detailed-example.html"> <img src="man/figures/demo-complex.png" width="80%" /> </a> | <a href="https://coolbutuseless.github.io/package/tickle/articles/juliaset.html"> <img src="man/figures/julia.png" width="80%" /> </a> |
+| <a href="https://coolbutuseless.github.io/package/tickle/articles/ggreview.html"><img src="man/figures/ggreview-snap.png" width="80%" /> </a>         | <a href="https://coolbutuseless.github.io/package/tickle/articles/idle.html"><img src="man/figures/idle.png" width="80%" /> </a>       |
 
 ## Examples/Vignettes
 
@@ -132,8 +125,8 @@ Please view the online vignettes for more details on how to use
     font](https://coolbutuseless.github.io/package/tickle/articles/fonts.html)
 -   [Understanding widget
     layout](https://coolbutuseless.github.io/package/tickle/articles/packing.html)
--   [Using an idle callback to run a function continually in the
-    background](https://coolbutuseless.github.io/package/tickle/articles/idle.html)
+-   [Continuous rain drops using an idle
+    callback](https://coolbutuseless.github.io/package/tickle/articles/idle.html)
 
 ## Containers
 
