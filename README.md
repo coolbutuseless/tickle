@@ -76,7 +76,7 @@ Things to note:
 ``` r
 library(tickle)
 
-value <- reactive_dbl(40)
+happiness <- reactive_dbl(40)
 
 ui_spec <- tic_window(
   title = "Hello World", 
@@ -86,8 +86,8 @@ ui_spec <- tic_window(
       tic_button("World", command = function() {message("World")})
     ),
     tic_col(
-      tic_slider(value),
-      tic_label(textvariable = value)
+      tic_slider(happiness),
+      tic_label(textvariable = happiness)
     )
   )
 )
@@ -109,6 +109,8 @@ win <- render_ui(ui_spec)
 Please view the online vignettes for more details on how to use
 `{tickle}`
 
+-   [Introductory
+    Examples](https://coolbutuseless.github.io/package/tickle/articles/helloworld.html)
 -   [Big example with lots of
     widgets](https://coolbutuseless.github.io/package/tickle/articles/detailed-example.html)
 -   [Reactive

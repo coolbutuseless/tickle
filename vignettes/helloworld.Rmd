@@ -1,0 +1,96 @@
+---
+title: "Hello World"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Hello World}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+
+#  Hello World
+
+Here are some more introductory examples.
+
+
+## Basic 'Hello World example'
+
+```{r eval = FALSE}
+library(tickle)
+
+happiness <- reactive_dbl(40)
+
+ui_spec <- tic_window(
+  title = "Hello World", 
+  tic_row(
+    tic_col(
+      tic_button("Hello", command = function() {message("Hello")}, style = 'primary'),
+      tic_button("World", command = function() {message("World")})
+    ),
+    tic_col(
+      tic_slider(happiness),
+      tic_label(textvariable = happiness)
+    )
+  )
+)
+
+win <- render_ui(ui_spec)
+```
+
+
+
+## Echo the slider value to the console whenever it is changed
+
+```{r eval = FALSE}
+library(tickle)
+
+happiness <- reactive_dbl(40)
+
+ui_spec <- tic_window(
+  title = "Hello World", 
+  tic_row(
+    tic_col(
+      tic_button("Hello", command = function() {message("Hello")}, style = 'primary'),
+      tic_button("World", command = function() {message("World")})
+    ),
+    tic_col(
+      tic_slider(happiness, command = function(...) { message(happiness()) }),
+      tic_label(textvariable = happiness)
+    )
+  )
+)
+
+win <- render_ui(ui_spec)
+```
+
+
+## Echo the slider value to the console only when the button is pressed
+
+```{r eval = FALSE}
+library(tickle)
+
+happiness <- reactive_dbl(40)
+
+ui_spec <- tic_window(
+  title = "Hello World", 
+  tic_row(
+    tic_col(
+      tic_button("Hello", command = function() {message("Hello: ", round(happiness(), 1))}, style = 'primary'),
+      tic_button("World", command = function() {message("World")})
+    ),
+    tic_col(
+      tic_slider(happiness),
+      tic_label(textvariable = happiness)
+    )
+  )
+)
+
+win <- render_ui(ui_spec)
+```
